@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { DATABASE_URL } = require('../constants');
+
 
 // Create a new Pool instance with database connection options
 const pool = new Pool({
