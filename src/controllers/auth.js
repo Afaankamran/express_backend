@@ -91,3 +91,38 @@ exports.register = async (req, res) => {
 
 
     };
+
+
+
+    exports.hospital = async (req, res) => {
+        const {hospital_name, hospital_location, hospital_rating, estimated_waiting_time} = req.body
+           try{
+               
+               await db.query('INSERT INTO hospitals (hospital_name, hospital_location, hospital_rating, estimated_waiting_time) VALUES ($1, $2 , $3, $4)', [hospital_name, hospital_location, hospital_rating, estimated_waiting_time])
+               return res.status(201).json({
+                   success: true,
+                   message: 'Hospital added successfully',
+               })
+           }
+           catch(error){
+               console.log(error.message)
+               return res.status(500).json({
+                   error: error.message,
+               })
+           
+           }
+           }
+
+    
+    
+           exports.gethospitals = async (req, res) => {
+
+            try{
+                const {rows} = await db.query('select * from hospitals')
+                console.log(rows)
+            }
+            catch(error){
+                console.log(error.message)
+                
+            }
+            }

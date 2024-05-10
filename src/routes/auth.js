@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, register, login , dashboard, logout} = require('../controllers/auth')
+const { getUsers, register, login, dashboard, logout, hospital, gethospitals } = require('../controllers/auth')
 
 const { validationMiddleware } = require('../middlewares/validations-middleware')
 const { registerValidation, loginValidation } = require('../validators/auth')
@@ -19,7 +19,8 @@ router.get('/dashboard', userAuth, dashboard)
 
 router.get('/logout', userAuth, logout)
 
-
+router.post('/hospitals', hospital)
+router.get('/get-hospitals', gethospitals)
 
 
 router.get('/', (req, res) => {
