@@ -1,4 +1,4 @@
-const { Strategy, ExtractJwt } = require('passport-jwt');
+const { Strategy} = require('passport-jwt');
 const passport = require('passport');
 const { SECRET } = require('../constants');
 const db = require('../db');
