@@ -1,8 +1,11 @@
-const { Router } = require('express')
-const { getUsers, register, login } = require('../controllers/auth')
-const router = Router()
+const express = require('express');
+const router = express.Router();
+const { getUsers, register, login , dashboard, logout} = require('../controllers/auth')
+
 const { validationMiddleware } = require('../middlewares/validations-middleware')
 const { registerValidation, loginValidation } = require('../validators/auth')
+const { userAuth } = require('../middlewares/auth-middleware')
+
 
 // Define routes
 router.get('/get-users', getUsers)
@@ -11,6 +14,10 @@ router.get('/get-users', getUsers)
 router.post('/register', registerValidation, validationMiddleware, register)
 
 router.post('/login', loginValidation, validationMiddleware, login)
+router.get('/dashboard', userAuth, dashboard)
+
+router.get('/logout', userAuth, logout)
+
 
 
 
