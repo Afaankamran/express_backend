@@ -1,17 +1,19 @@
-const { Router } = require('express');
-const { getUsers, register } = require('../controllers/auth');
-const router = Router();
-const { validationMiddleware } = require('../middlewares/validations-middleware');
-const { registerValidation } = require('../validators/auth');
+const { Router } = require('express')
+const { getUsers, register } = require('../controllers/auth')
+const router = Router()
+const { validationMiddleware } = require('../middlewares/validations-middleware')
+const { registerValidation } = require('../validators/auth')
 
 // Define routes
-router.get('/get-users', getUsers);
+router.get('/get-users', getUsers)
 
 // Register route with middleware for validation
-router.post('/register', registerValidation, validationMiddleware, register);
+router.post('/register', registerValidation, validationMiddleware, register)
+
+
 
 router.get('/', (req, res) => {
-    return res.send('API is working!');
-});
+    return res.send('API is working!')
+})
 
-module.exports = router;
+module.exports = router

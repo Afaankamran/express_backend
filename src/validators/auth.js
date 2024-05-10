@@ -14,7 +14,9 @@ const password = check('password')
 //check if email exists
 
 const emailExists = check('email').custom( async (value)=> {
-const {rows} =  await db. query('SELECT * from users WHERE email=$1', [
+const { rows } =  await db. query('SELECT * from users WHERE email = $1', [
+    
+    value,
 ])
 if (rows. length) {
 throw new Error('Email already exists.') 
