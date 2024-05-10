@@ -4,7 +4,7 @@ const { getUsers, register, login , dashboard, logout} = require('../controllers
 
 const { validationMiddleware } = require('../middlewares/validations-middleware')
 const { registerValidation, loginValidation } = require('../validators/auth')
-const { userAuth } = require('../middlewares/auth-middleware')
+const { userAuth } = require('../middlewares/passport-middleware')
 
 
 // Define routes
@@ -15,6 +15,7 @@ router.post('/register', registerValidation, validationMiddleware, register)
 
 router.post('/login', loginValidation, validationMiddleware, login)
 router.get('/dashboard', userAuth, dashboard)
+
 
 router.get('/logout', userAuth, logout)
 

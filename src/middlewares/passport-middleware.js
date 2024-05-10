@@ -1,9 +1,9 @@
-const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
+const passport = require('passport');
 const { SECRET } = require('../constants');
-const { db } = require('../db');
+const db = require('../db');
 
-const cookieExtractor = function (req) {
+const cookieExtractor = (req) => {
     let token = null;
     if (req && req.cookies) {
         token = req.cookies['token'];
@@ -13,38 +13,26 @@ const cookieExtractor = function (req) {
 
 const opts = {
     secretOrKey: SECRET,
-    jwtFromRequest: cookieExtractor,
+    jwtFromRequest: cookieExtractor
 };
 
-passport.use(new Strategy(opts, async (jwtPayload, done) => {
-    try {
-        const { id } = jwtPayload; // Extract user ID from JWT payload
+passport.use(
+    new Strategy(opts, async (payload, done) => {
+        try {
+            const { id } = payload;
+            const result = await db.query('SELECT user_id, email FROM users WHERE user_id = $1', [id]);
 
-        const { rows } = await db.query(
-            'SELECT user_id, email FROM users WHERE user_id = $1',
-            [id]
-        );
+            if (result.rows.length === 0) {
+                throw new Error('Unauthorized');
+            }
 
-        if (!rows.length) {
-            return done(null, false); // User not found in database
+            const user = { id: result.rows[0].user_id, email: result.rows[0].email };
+            return done(null, user);
+        } catch (error) {
+            console.error('Error in authentication:', error.message);
+            return done(error, false);
         }
+    })
+);
 
-        const user = {
-            id: rows[0].user_id,
-            email: rows[0].email,
-        };
-
-        return done(null, user); // Authentication successful
-    } catch (error) {
-        console.error('Error during authentication:', error.message);
-        return done(error, false); // Pass error to done callback
-    }
-}));
-
-// Example route usage:
-// This middleware will authenticate requests using the 'jwt' strategy
-// and make the authenticated user available as req.user
-// You can use this middleware in your route handlers as needed
-// e.g., router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res) => { ... });
-
-module.exports = passport; // Export configured passport for use in other parts of your application
+exports.userAuth = passport.authenticate('jwt', { session: false });
